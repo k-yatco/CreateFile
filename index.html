@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Create Feature File</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/modal.css">
+<style>
+
+</style>
+<script>
+
+</script>
+</head>
+<body>
+<div class="container-xl">
+	<div class="table-responsive">
+		<div class="table-wrapper">
+			<div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>Test Case<b>Management</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#addStepsModal" class="btn btn-success" data-toggle="modal" id="btnAddSteps"><i class="material-icons">&#xE147;</i> <span>Add Steps</span></a>
+						<a id="button" class="btn btn-primary" onclick=""><i class="material-icons">&#xE147;</i> <span>TEST</span></a>
+						<a id="button" class="btn btn-primary" onclick="htmlTableToExcel('xlsx')"><i class="material-icons">&#xE147;</i> <span>EXCEL</span></a>
+						<a id="button" class="btn btn-primary" onclick="createFeatureFile()"><i class="material-icons">&#xE147;</i> <span>FEATURE</span></a>
+					
+						<!--<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>	-->					
+					</div>
+				</div>
+			</div>
+
+			<table class="table table-striped table-hover">
+				<div class = "headerfield">
+
+						Test Case ID <input type ="text" id="tcid" style="width: 200px;"></input>
+						Feature<input type ="text" id="feature" style="width: 200px;"></input>
+						Scenario<input type ="text" id="scenario" style="width: 200px;"></input>
+	
+				</div>
+				<br>
+				<div>
+					Template <select  name="template" id="template">
+						<option value="" disabled selected>Select</option>
+				</div>
+				<br>
+				
+			</table>
+			<table class="table table-striped table-hover" id="maintable">
+				<thead>
+					<tr>
+						<th>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="selectAll">
+								<label for="selectAll"></label>
+							</span>
+						</th>
+						<th>Step Definition</th>
+						<th>Step</th>
+						<th>Parameters</th>
+						<th>Test Data Table</th>
+						<th>Test Data</th>
+						<!--<th>Actions</th>-->
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>        
+</div>
+<!-- FORM Modal HTML -->
+<div id="addStepsModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Add Test Step</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group" id ="fstepdef">
+							<label>Step Definition</label><label class="validation-error hide" id="stepdefValidationError">This field is required.</label>
+							<select  name="stepdef" id="stepdef">
+							<!-- <select class="chzn-select" name="stepdef" id="stepdef" onChange="onchangestepdef(this.value);">-->
+							<!--<div name="stepdef" id="stepdef">	<select>-->
+							<!--	<option value="" disabled selected>Select</option>
+								<option value="Scenario">Scenario</option>
+								<option value="Given">Given</option>
+								<option value="When">When</option>
+								<option value="Then">Then</option>-->
+								<option value="" disabled selected>Select</option>
+								<option value="Scenario">Scenario</option>
+								<option value="Precondition">Precondition</option>
+								<option value="Steps">Steps</option>
+								<option value="Checkpoint">Checkpoint</option>
+							</select> 
+							<!--</div>-->
+					</div>
+					<div class="form-group" id ="fsteps">
+						<label>Step</label><br>
+						<!--<input type="text" name="steps" id="steps">-->
+						<select name="steps" id="steps" class ="chosen-select" >
+
+						</select>
+						<!--</div>-->
+					</div>
+					<div class="form-group" id ="fparam">
+						<label>Parameters</label>
+						<table type="text" name="parameters" id="parameters" class ="chosen-select"></table>
+					</div>
+					<div class="form-group"  id ="ftbl">
+						<label>Test Data </label><br>
+						<select name="tbldata" id="tbldata" class = "chosen-select">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group" id ="ftdata">
+						<label>Test Data  Table</label><br>
+						<!--<input type="text" name="testdata" id="testdata">-->
+						<div class="table-responsive">
+						<table type="text" name="testdata" id="testdata"></table>
+						</div>
+					</div>
+					<!--<div  class="form-action-buttons">
+						<input type="submit" value="Submit" style="width: 100px;">
+						<a id="button" class="btn btn-primary" onclick="loadTestDataTable(this)">LoadTable</a>
+						<a id="button" class="btn btn-primary" onclick="getUpdateTestDataTbl()">send table</a>-->
+					<!--</div>-->
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" id="btnCancel">
+					<input type="submit" class="btn btn-success"  data-dismiss="modal" value="Add" id="btnAdd">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.0/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin = "anonymous" referrerpolicy = "no-referrer"> </script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
+<script type="text/javascript" src="js/modal.js"></script>
+</html>
