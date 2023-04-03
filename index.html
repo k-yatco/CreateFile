@@ -30,11 +30,11 @@
 						<h2>Test Case<b>Management</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#addStepsModal" class="btn btn-success" data-toggle="modal" id="btnAddSteps"><i class="material-icons">&#xE147;</i> <span>Add Steps</span></a>
-						<a id="button" class="btn btn-primary" onclick=""><i class="material-icons">&#xE147;</i> <span>TEST</span></a>
-						<a id="button" class="btn btn-primary" onclick="htmlTableToExcel('xlsx')"><i class="material-icons">&#xE147;</i> <span>EXCEL</span></a>
+						<a id="btnTest" class="btn btn-primary" onclick=""><i class="material-icons">&#xE147;</i> <span>TEST</span></a>
+						<!--<a id="button" class="btn btn-primary" onclick="htmlTableToExcel('xlsx')"><i class="material-icons">&#xE147;</i> <span>EXCEL</span></a>-->
+						<a id="btnJSON" class="btn btn-primary" onclick=""><i class="material-icons">&#xE147;</i> <span>JSON</span></a>
 						<a id="button" class="btn btn-primary" onclick="createFeatureFile()"><i class="material-icons">&#xE147;</i> <span>FEATURE</span></a>
-					
+						<a href="#addStepsModal" class="btn btn-success" data-toggle="modal" id="btnAddSteps"><i class="material-icons">&#xE147;</i> <span>Add</span></a>
 						<!--<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>	-->					
 					</div>
 				</div>
@@ -70,7 +70,7 @@
 						<th>Parameters</th>
 						<th>Test Data Table</th>
 						<th>Test Data</th>
-						<!--<th>Actions</th>-->
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -85,7 +85,7 @@
 		<div class="modal-content">
 			<form>
 				<div class="modal-header">						
-					<h4 class="modal-title">Add Test Step</h4>
+					<h4 class="modal-title">Add Step</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">					
@@ -146,6 +146,83 @@
 		</div>
 	</div>
 </div>
+<!-- Edit Step -->
+<div id="editModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Edit Step</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group" id ="fstepdef">
+							<label>Step Definition</label></label>
+							<select  name="estepdef" id="estepdef">
+								<option value="" disabled selected>Select</option>
+								<option value="Scenario">Scenario</option>
+								<option value="Precondition">Precondition</option>
+								<option value="Steps">Steps</option>
+								<option value="Checkpoint">Checkpoint</option>
+							</select> 
+							<!--</div>-->
+					</div>
+					<div class="form-group" id ="fsteps">
+						<label>Step</label><br>
+						<!--<input type="text" name="steps" id="steps">-->
+						<select name="esteps" id="esteps" class ="chosen-select" >
+
+						</select>
+						<!--</div>-->
+					</div>
+					<div class="form-group" id ="fparam">
+						<label>Parameters</label>
+						<table type="text" name="eparameters" id="eparameters" class ="chosen-select"></table>
+					</div>
+					<div class="form-group"  id ="ftbl">
+						<label>Test Data </label><br>
+						<select name="etbldata" id="etbldata" class = "chosen-select">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group" id ="ftdata">
+						<label>Test Data  Table</label><br>
+						<!--<input type="text" name="testdata" id="testdata">-->
+						<div class="table-responsive">
+						<table type="text" name="etestdata" id="etestdata"></table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+					<input type="submit" class="btn btn-info" value="Save">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Delete Modal HTML -->
+<div id="deleteStep" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Delete Step</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<p>Are you sure you want to delete these Records?</p>
+					<p class="text-warning"><small>This action cannot be undone.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+					<input type="submit" class="btn btn-danger" value="Delete">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 </body>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.0/jquery.min.js"></script>

@@ -636,13 +636,14 @@ var tabledata = {
 
 
 $(document).ready(function(){
-    $('#template').chosen({width: "80%",allow_single_deselect:true });
+    $('#template').chosen({width: "120px",allow_single_deselect:true });
     $('#stepdef').chosen({width: "80%",allow_single_deselect:true });
     $('#steps').chosen({width: "80%",allow_single_deselect:true });
     $('#tbldata').chosen({width: "80%",allow_single_deselect:true });
+   
     var option = '';
     for (var i=0;i<table.length;i++){
-        console.log(table[i])
+       // console.log(table[i])
         option += '<option></option>';
         option += '<option value="'+ table[i] + '">' + table[i] + '</option>';
     }
@@ -652,9 +653,10 @@ $(document).ready(function(){
 });
 
 $("#btnAddSteps").click(function(){
-    $('#tbldata').chosen({width: "80%"});
-    $("#parameters").find('div').remove();
-   // $("#parameters").val('').trigger("chosen:updated");
+    $('#tbldata').chosen({width: "120px"});
+    $("#parameters").find('#myDiv').remove();
+    $("#parameters").find('table').remove();
+    //$("#parameters").val('').trigger("chosen:updated");
     $("#stepdef").val('').trigger("chosen:updated");
     $("#steps").val('').trigger("chosen:updated");
     $("#tbldata").val('').trigger("chosen:updated");
@@ -690,14 +692,23 @@ $("#btnAdd").click(function(){
             tbl = "";
         }
         var td = addtable();
-        console.log(td)
+       // console.log(td)
+        if(td){
+            td = '<td><div class="table-responsive"><table '+td+'</table></div></td>'
+        }else{
+            td = '<td></td>'
+        }
+       // console.log(td)
         var row = '<tr>'+
                 '<td>'+chkbx+'</td>'+
                 '<td>'+sd+'</td>'+
                 '<td>'+stp+'</td>'+
                 '<td>'+p+'</td>'+
                 '<td>'+tbl+'</td>'+
-                '<td><div class="table-responsive"><table '+td+'</table></div></td>'+
+                td+
+                //'<td><div class="table-responsive"><table '+td+'</table></div></td>'+
+                '<td><a href="#editModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" id="btnEdit" onclick="onEdit(this) ">&#xE254;</i></a>'+
+                '<a onClick="onDelete(this)" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>'+
                 '</tr>';
        // console.log(row)
 
@@ -706,6 +717,67 @@ $("#btnAdd").click(function(){
         $('#maintable').append(row);
        return false;
 });
+
+//edit modal
+$(document).on("click", "#btnTest",function(){
+    var data = "";
+    var param = "";
+    //get feature value
+    var tcid = document.getElementById("tcid").value;
+    var feature = document.getElementById("feature").value;
+    var data = "Feature: " + feature;
+    var scenario = document.getElementById("scenario").value;
+    if( scenario != null && scenario != ""){
+        var data = data+"\n"+"Scenario: " + scenario+"\n";
+      
+    }
+    var data = data+"\n"
+    var rowCount = $("#maintable tbody").length;
+    console.log(rowCount)
+    //start
+    for(var i =1; i < rowCount; i++){
+        //console.log(tr.innerHTML)
+   /*     var td = tr[i].getElementsByTagName("td");
+        //console.log(td.innerHTML)
+        var stepdef = td[1];
+        if(stepdef){
+            stepdef = stepdeftrans[stepdef.textContent]
+        }
+        var step = td[2]
+        if(step){
+            step = paramtranslate[step.textContent]
+        }
+        var param = td[3]
+        if(param.textContent){
+       // if(param.textContent != null && param.textContent != undefined  && param.textContent != ""  && param.textContent != "undefined"){
+            var paramval = param.textContent;
+            var myArray = paramval.split(",");
+            for (j=0;j<myArray.length;j++){
+                var value = myArray[j].split(":");
+                    step = step.replace('['+value[0].trim()+']',value[1].trim());
+            }
+        }
+        if(stepdef == "Scenario"){
+             data = data + stepdef +": "+ step
+         }else{
+             data = data + stepdef +" "+ step
+         }
+
+         var tbl = td[4]
+         if(tbl){
+            var tblval = td[4].textContent;
+
+         }
+         console.log(data);
+         console.log(tblval);*/
+   }
+   var blob = new Blob([data], {
+    //type: "text/plain;charset=utf-8",
+    type: "text/feature;charset=utf-8",
+ });
+ saveAs(blob, tcid+".feature");
+});
+
 /*$(document).on('load','#addStepsModal',function(){
     $("#testdata").find('tr').remove();
    // $("#testdata").find('table').remove();
@@ -829,9 +901,6 @@ $(document).on("click", "#btnCancel, .close",function(){
 
 
 
-
-
-
 function cloneRow() {
     var table = document.getElementById('testdata');
     var row = document.getElementById("row0"); // find row to copy
@@ -908,10 +977,10 @@ function addtable(){
  var table = document.getElementById("testdata");
  //var tbody = table.getElementsByTagName("tbody")
  if(table){
-        var data = "<tbody>";
+        var data = '<tbody id="data">';
         var rowCount = table.rows.length;
         if(rowCount > 0){
-            console.log(rowCount)
+           // console.log(rowCount)
             var cellCount = table.rows[0].cells.length; 
             for (i = 1;i<rowCount;i++){
                 data += "<tr>";
@@ -919,6 +988,7 @@ function addtable(){
                         data +=  "<td>"+table.rows[i].querySelectorAll('#testdata td')[j].textContent + "</td>";
                     }
                 }
+                
                     data += "</tr></tbody>";
             // console.log(data);
             return data;
@@ -941,3 +1011,258 @@ function getParamForm() {
     }        
     return data;
 }
+
+
+function onDelete(td) {
+    if (confirm('Are you sure to delete this record ?')) {
+        row = td.parentElement.parentElement;
+        document.getElementById("maintable").deleteRow(row.rowIndex);
+       // resetForm();
+    }
+}
+
+function onEdit(td) {
+    $('#estepdef').chosen({width: "80%",allow_single_deselect:true });
+    $('#esteps').chosen({width: "80%",allow_single_deselect:true });
+    $('#etbldata').chosen({width: "80%",allow_single_deselect:true });
+    selectedRow = td.parentElement.parentElement.parentElement;
+    
+    //get value per column from main table
+    var stepdef = stepdeftrans[selectedRow.cells[1].innerHTML]
+    var step = paramtranslate[selectedRow.cells[2].innerHTML]
+    var param = selectedRow.cells[3].innerHTML
+   // console.log(stepdef + "  " + step + "   " +param)
+    //resetForm();
+    //deleteTestDataTbl();
+   /* var tblval = "";
+    selectedRow = td.parentElement.parentElement;
+    document.getElementById("stepdef").value = selectedRow.cells[0].innerHTML;
+    loadSteps(selectedRow.cells[1].innerHTML);
+    loadParam(selectedRow.cells[2].innerHTML);
+    //document.getElementById("steps").value = selectedRow.cells[1].innerHTML;
+    //document.getElementById("parameters").value = selectedRow.cells[2].innerHTML;
+    document.getElementById("tbldata").value = selectedRow.cells[3].innerHTML;
+    deleteTestDataTbl();
+    var tblval = document.getElementById("tbldata").value;
+    if(tblval){
+        loadTestDataTable(selectedRow.cells[4].innerHTML);
+    }
+
+   
+    //console.log(selectedRow.cells[3].innerHTML);
+    //document.getElementById("testdata").value = selectedRow.cells[4].innerHTML;
+    //console.log(selectedRow.cells[4].innerHTML);*/
+    
+}
+/**CREATE FEATURE FILE */
+
+function createFeatureFile(){
+    var data = "";
+    var param = "";
+    //get feature value
+    var tcid = document.getElementById("tcid").value;
+    var feature = document.getElementById("feature").value;
+    var data = "Feature: " + feature;
+    var scenario = document.getElementById("scenario").value;
+    if( scenario != null && scenario != ""){
+        var data = data+"\n"+"Scenario: " + scenario+"\n";
+      
+    }
+    var data = data+"\n"
+    var table = document.getElementById("maintable");
+    //var tbody =  document.getElementById("maintable")
+    var tr = table.getElementsByTagName("tr");
+    var rowCount = tr;
+    console.log(rowCount);
+
+    
+    for(var i =1; i < rowCount; i++){
+        console.log(tr.innerHTML)
+        var td = tr[i].getElementsByTagName("td");
+        console.log(td.innerHTML)
+        var stepdef = td[1];
+        if(stepdef){
+            stepdef = stepdeftrans[stepdef.textContent]
+        }
+        var step = td[2]
+        if(step){
+            step = paramtranslate[step.textContent]
+        }
+        var param = td[3]
+        if(param.textContent){
+       // if(param.textContent != null && param.textContent != undefined  && param.textContent != ""  && param.textContent != "undefined"){
+            var paramval = param.textContent;
+            var myArray = paramval.split(",");
+            for (j=0;j<myArray.length;j++){
+                var value = myArray[j].split(":");
+                    step = step.replace('['+value[0].trim()+']',value[1].trim());
+            }
+        }
+        if(stepdef == "Scenario"){
+             data = data + stepdef +": "+ step
+         }else{
+             data = data + stepdef +" "+ step
+         }
+
+         var tbl = td[4]
+         if(tbl){
+            var tblval = td[4].textContent;
+
+         }
+         console.log(data);
+         console.log(tblval);
+       /* if( table.textContent != null && table.textContent != undefined  && table.textContent != ""  && table.textContent != "undefined"){
+            data = data +' with "'+ table.textContent +':"' 
+        }
+        //replace parameter values
+
+        //add test table
+        if(testdata.textContent != null && testdata.textContent != undefined  && testdata.textContent != ""  && testdata.textContent != "undefined"){
+            data = data +"\n"+ testdata.textContent;
+        }*/
+
+      //  data = data +"\n";
+   }
+ //console.log(data);
+   /* var blob = new Blob([data], {
+        //type: "text/plain;charset=utf-8",
+        type: "text/feature;charset=utf-8",
+     });
+     saveAs(blob, tcid+".feature");*/
+}  
+
+
+function tableToJson() { 
+   /* var table = document.getElementById('maintable');
+    var data = [];
+    for (var i = 1; i < table.rows.length; i++) { 
+        var tableRow = table.rows[i]; 
+        var rowData = []; 
+        for (var j = 0; j < tableRow.cells.length; j++) { 
+            rowData.push(tableRow.cells[j].innerHTML);
+        } 
+        data.push(rowData); 
+    } 
+    console.log("tabletoJSON " + data)
+    return data; */
+    /*var obj = {};
+    var table = document.getElementById('maintable');
+    var row, rows = table.rows;
+    for (var i=0, iLen=rows.length; i<iLen; i++) {
+      row = rows[i];
+      obj[row.cells[0].textContent] = row.cells[1].textContent
+    }
+    //
+    console.log(JSON.stringify(obj))
+    return JSON.stringify(obj);*/
+    var data = [];
+
+    // first row needs to be headers
+    var table = document.getElementById('maintable');
+    var headers = [];
+    for (var i=0; i<table.rows[0].cells.length; i++) {
+        headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+    }
+
+    // go through cells
+    for (var i=1; i<table.rows.length; i++) {
+
+        var tableRow = table.rows[i];
+        var rowData = {};
+
+        for (var j=0; j<tableRow.cells.length; j++) {
+
+            rowData[ headers[j] ] = tableRow.cells[j].innerHTML;
+
+        }
+
+        data.push(rowData);
+    }       
+   // console.log(JSON.stringify(data))
+    return data;
+    
+}
+function converttableToJSON(){
+    //tableToJson()
+    parseHTMLTableElem()
+   // console.log(tableToJSON(document.getElementById('t0')));
+}
+
+
+// Parse HTML table element to JSON array of objects
+/*function parseHTMLTableElem() {
+var tableEl  = document.getElementById('maintable');;
+    const columns = Array.from(tableEl.querySelectorAll('th')).map(it => it.textContent)
+    console.log(columns)
+    const rows = tableEl.querySelectorAll('tbody > tr')
+    return Array.from(rows).map(row => {
+        const cells = Array.from(row.querySelectorAll('td'))
+        
+        return columns.reduce((obj, col, idx) => {
+            obj[col] = cells[idx].textContent;
+           // console.log(obj)
+            return obj
+        }, {})
+    })
+}*/
+
+
+
+//append main table upon click add in modal
+/*$("#btnJSON").click(function(){
+    var myRows = { myRows: [] };
+    var $th = $('#table th');
+    $('table tbody tr').each(function(i, tr){
+        var obj = {}, $tds = $(tr).find('td');
+        $th.each(function(index, th){
+            obj[$(th).text()] = $tds.eq(index).text();
+        });
+        myRows.myRows.push(obj);
+    });
+    alert(JSON.stringify(myRows));
+   /* var myRows = [];
+    var $headers = $("th");
+    var $rows = $("#maintable tbody tr").each(function(index) {
+    $cells = $(this).find("td");
+    myRows[index] = {};
+    $cells.each(function(cellIndex) {
+        myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+    });    
+    });
+
+    // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+    var myObj = {};
+    myObj.myrows = myRows;
+    console.log(JSON.stringify(myObj));*/
+//});
+// Parse HTML table element to JSON array of objects
+/*function parseHTMLTableElem( ) {
+    var tableEl  = document.getElementById('maintable');
+    var expectingHeaderRow = 0;
+	var columns = Array.from( tableEl.querySelectorAll( 'th' ) ).map( it => it.textContent );
+	var rows = Array.from( tableEl.querySelectorAll( 'tbody > tr' ) );
+	// must check for table that has no th cells, but only if we are told to "expectingHeaderRow"
+	if ( columns.length == 0 && expectingHeaderRow ) {
+		// get columns for a non-th'd table
+		columns = Array.from( tableEl.querySelectorAll( 'tbody > tr' )[ 0 ].children ).map( it => it.textContent )
+		// must remove first row as it is the header
+		rows.shift();
+	}
+	const returnJson = {
+		'headers': columns,
+		'rows': rows.map( row => {
+			const cells = Array.from( row.querySelectorAll( 'td' ) )
+			return columns.reduce( ( obj, col, idx ) => {
+				obj[ col ] = cells[ idx ].textContent
+				return obj
+			}, {} )
+		} )
+	};
+	// if we were expecting a header row with th cells lets see if we got it
+	// if we got nothing lets try looking for a regular table row as the header
+	if ( !expectingHeaderRow && returnJson.headers.length == 0 && ( returnJson.rows[ 0 ] && Object.keys( returnJson.rows[ 0 ] ).length === 0 ) ) {
+		return parseHTMLTableElem( tableEl, true );
+	}
+    console.log(returnJson)
+	return returnJson;
+}*/
